@@ -7,11 +7,10 @@ from functools import lru_cache
 
 from shapely import MultiPoint, MultiPolygon, Point
 
+from src import config
+
 TCoord = list[float]
 TPolygon = list[list[TCoord]]
-
-TARGET_GEOJSON_BORDERS = "./kirov_borders.geojson"
-MARKER_SVG_PATH = "./map_marker.svg"
 
 
 @dataclass
@@ -31,7 +30,7 @@ class OknFeature:
 
 @lru_cache(maxsize=None)
 def get_dataset_borders() -> dict:
-    with open(TARGET_GEOJSON_BORDERS) as border_fh:
+    with open(config.TARGET_GEOJSON_BORDERS) as border_fh:
         borders = json.load(border_fh)
 
     return borders
@@ -44,7 +43,7 @@ def get_borders_multipolygon() -> MultiPolygon:
 
 @lru_cache(maxsize=None)
 def get_marker_svg() -> str:
-    with open(MARKER_SVG_PATH, "r") as marker_fh:
+    with open(config.MARKER_SVG_PATH, "r") as marker_fh:
         svg_bytes = marker_fh.read()
 
     return "data:image/svg+xml;base64," + base64.b64encode(
